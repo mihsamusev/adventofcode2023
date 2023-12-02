@@ -12,7 +12,7 @@ type Digit struct {
 
 const maxSpelledLen int = 5
 
-var pairs = [9]Digit{
+var spelledDigits = [9]Digit{
 	{"one", 1},
 	{"two", 2},
 	{"three", 3},
@@ -73,9 +73,9 @@ func calibrationValue(digits []int) int {
 
 func stringToValue(str string) int {
 	value := 0
-	for _, pair := range pairs {
-		if strings.HasPrefix(str, pair.spelled) {
-			return pair.value
+	for _, digit := range spelledDigits {
+		if strings.HasPrefix(str, digit.spelled) {
+			return digit.value
 		}
 	}
 	return value
