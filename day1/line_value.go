@@ -40,26 +40,22 @@ func lineDigitsExtended(str string) []int {
 	runes := []rune(str)
 
 	i := 0
-	step := 1
 	for i < len(runes) {
 		if unicode.IsDigit(runes[i]) {
 			digits = append(digits, runeToValue(runes[i]))
-			step = 1
 		} else {
 			windowEnd := i + maxSpelledLen
 			if windowEnd >= len(str) {
 				windowEnd = len(str)
 			}
 			substr := str[i:windowEnd]
-			substrValue := 0
-			substrValue, step = stringToValue(substr)
-			
+			substrValue := stringToValue(substr)
+
 			if substrValue != 0 {
 				digits = append(digits, substrValue)
-				step = 3
 			}
 		}
-		i += step
+		i++
 	}
 	return digits
 }
@@ -75,15 +71,14 @@ func calibrationValue(digits []int) int {
 	return value
 }
 
-func stringToValue(str string) (int, int) {
-	width := 1
+func stringToValue(str string) int {
 	value := 0
 	for _, pair := range pairs {
 		if strings.HasPrefix(str, pair.spelled) {
-			return pair.value, len(pair.spelled)
+			return pair.value
 		}
 	}
-	return value, width
+	return value
 }
 func runeToValue(r rune) int {
 	value := 0

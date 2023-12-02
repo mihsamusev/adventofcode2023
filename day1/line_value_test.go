@@ -27,23 +27,24 @@ func TestDigitsCorrect(t *testing.T) {
 	str := "21xfxfourmzmqbqp1"
 	actual := lineDigitsExtended(str)
 	expected := []int{2, 1, 4, 1}
-	if len(actual) != len(expected) {
-		t.Errorf("actual: %v != expected: %v", actual, expected)
-		return
-	}
-
-	for i, v := range actual {
-		if v != expected[i] {
-			t.Errorf("actual: %v != expected: %v", actual, expected)
-			return
-		}
-	}
+	AssertSlicesEqual(t, actual, expected)
 }
 
-func TestDigitsCorrectTricky(t *testing.T) {
+func TestDigitsCorrectOneight(t *testing.T) {
+	str := "oneightwoneight"
+	actual := lineDigitsExtended(str)
+	expected := []int{1, 8, 2, 1, 8}
+	AssertSlicesEqual(t, actual, expected)
+}
+
+func TestDigitsCorrectTwone(t *testing.T) {
 	str := "twone"
 	actual := lineDigitsExtended(str)
-	expected := []int{2}
+	expected := []int{2, 1}
+	AssertSlicesEqual(t, actual, expected)
+}
+
+func AssertSlicesEqual(t *testing.T, actual, expected []int) {
 	if len(actual) != len(expected) {
 		t.Errorf("actual: %v != expected: %v", actual, expected)
 		return
