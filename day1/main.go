@@ -4,59 +4,46 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"unicode"
+	"strconv"
 )
 
-
-func to_digit(r rune) int {
-	return int(r - '0')
-}
-
-func line_value(str string) int {
-	value := 0
-	digits := make([]int, 0, 10)
-	for _, rune := range str {
-		if unicode.IsDigit(rune) {
-			digits = append(digits, to_digit(rune))
-		}
-	}
-	numDigits := len(digits)
-	if numDigits != 0 {
-		first := digits[0]
-		last := digits[numDigits - 1]
-		value = first*10 + last
-	}
-
-	return value
-}
-
-func parse(dataFile string) {
+func parse(dataFile string, maxScans int, digitsFromLineFn func(string) []int) {
 	file, err := os.Open(dataFile)
 	if err != nil {
 		fmt.Println("im dead")
 	}
-
 	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
 
 	total := 0
+	i := 0
 	for scanner.Scan() {
+		if maxScans != -1 && i == maxScans {
+			break
+		}
 		line := scanner.Text()
-		value := line_value(line)
+		digits := digitsFromLineFn(line)
+		value := calibrationValue(digits)
+		fmt.Printf("%s -> %v -> %d\n", line, digits, value)
 		total += value
-		fmt.Printf("%s -> %d\n", line, value)
+		i++
 	}
 	fmt.Printf("total = %d\n", total)
-	
 
 	defer file.Close()
 }
 
 func main() {
-	dataFile := "test.txt"
+	dataFile := "test_1.txt"
+	maxScans := -1
 	args := os.Args
 	if len(args) > 1 {
 		dataFile = args[1]
 	}
-	parse(dataFile)
+
+	if len(args) > 2 {
+		maxScans, _ = strconv.Atoi(args[2])
+	}
+
+	fmt.Printf("Analyzing %d lines of %s\n", maxScans, dataFile)
+	parse(dataFile, maxScans, lineDigitsExtended)
 }
