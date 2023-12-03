@@ -21,6 +21,7 @@ func parse(dataFile string, maxScans int) {
 
 	i := 0
 	total := 0
+	totalPower := 0
 	for {
 		if maxScans != -1 && i == maxScans {
 			break
@@ -36,17 +37,20 @@ func parse(dataFile string, maxScans int) {
 		}
 
 		numberRefs := ParseNumberRefs(thisLine)
-		fmt.Printf("LOOKING FOR PARTS IN ROW %d\n", i)
+		fmt.Printf("LOOKING FOR GEARS IN ROW %d\n", i)
 		fmt.Printf("%d: %s\n", i-1, prevLine)
 		fmt.Printf("%d: %s\n", i, thisLine)
 		fmt.Printf("%d: %s\n", i+1, nextLine)
 
-		fmt.Printf("PARTS FOUND: %d\n", len(numberRefs))
 		filtered := FilterNumberRefs(numberRefs, prevLine, thisLine, nextLine)
 		for _, f := range filtered {
 			total += f.number
-			fmt.Printf("    %v\n", f)
 		}
+
+		gears := FindGears(thisLine, prevLine, nextLine, '*')
+		powers := GearPowers(gears)
+		totalPower += Sum(powers)
+		fmt.Printf("powers -> %d\n", powers)
 		fmt.Println()
 
 		prevLine = string([]byte(thisLine))
@@ -58,6 +62,7 @@ func parse(dataFile string, maxScans int) {
 		}
 	}
 	fmt.Printf("Total engine number ref: %d\n", total)
+	fmt.Printf("Total gear power: %d\n", totalPower)
 }
 
 func main() {
