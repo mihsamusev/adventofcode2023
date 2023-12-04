@@ -7,16 +7,11 @@ import (
     "errors"
 )
 
-type Card struct {
-    id int
-    winning []int
-    owned []int
-}
 
 func ParseCard(str string) (Card, error) {
     parts := strings.Split(str, ":")
     if len(parts) != 2 {
-        return Card{}, errors.New("Cant split by ':'")
+        return Card{}, errors.New("cant split by ':'")
     }
     cardStr := parts[0]
     scoreStr := parts[1]
@@ -28,7 +23,7 @@ func ParseCard(str string) (Card, error) {
 
     scoresStr := strings.Split(scoreStr, "|")
     if len(scoresStr) != 2 {
-        return Card{}, errors.New("Cant split by '|'")
+        return Card{}, errors.New("cant split by '|'")
     }
     winStr := scoresStr[0]
     ownedStr := scoresStr[1]

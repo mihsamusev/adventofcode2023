@@ -6,7 +6,6 @@ import (
 	"strconv"
 )
 
-
 func main() {
 	dataFile := "test_1.txt"
 	maxScans := -1
@@ -20,5 +19,6 @@ func main() {
 	}
 
 	fmt.Printf("Analyzing %d lines of %s\n", maxScans, dataFile)
-	Parse(dataFile, maxScans)
+	//SolvePartOne(dataFile, maxScans)
+	SolvePartTwo(dataFile)
 }
