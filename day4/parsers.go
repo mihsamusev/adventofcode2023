@@ -6,6 +6,67 @@ import (
 	"unicode"
 )
 
+type Card struct {
+    id int
+    winning []int
+    owned []int
+}
+
+func ParseCard(str string) (Card, error) {
+    parts := strings.Split(str, ":")
+    if len(parts) != 2 {
+        return Card{}, nil
+    }
+    cardStr := parts[0]
+    scoreStr := parts[1]
+
+    cardID, err := ParseId(cardStr)
+    if err == nil {
+        return Card{}, err
+    }
+
+    scoresStr := strings.Split(scoreStr, "|")
+    if len(scoresStr) != 2 {
+        return Card{}, nil
+    }
+    winStr := scoresStr[0]
+    ownedStr := scoresStr[1]
+
+    win, err := ParseSlice(winStr)
+    if err != nil {
+        return Card{}, err
+    }
+
+    owned, err := ParseSlice(ownedStr)
+    if err != nil {
+        return Card{}, err
+    }
+    return Card{cardID, win, owned}, nil
+
+}
+
+func ParseId(str string) (int, error) {
+    result, found := strings.CutPrefix(str, "Card")
+    if !found {
+        return -1, nil
+    }
+    result = strings.TrimSpace(result)
+    return strconv.Atoi(result)
+}
+
+func ParseSlice(str string) ([]int, error) {
+    trimmed := strings.Fields(str)
+    slice := make([]int, len(trimmed))
+    for _, t := range trimmed {
+        n, err := strconv.Atoi(t)
+        if err != nil {
+            return slice, err
+        }
+        slice = append(slice, n)
+    }
+    return slice, nil
+}
+
 type NumberRef struct {
 	number int
 	lower  int

@@ -26,6 +26,10 @@ func Parse(dataFile string, maxScans int) {
 		}
         line := scanner.Text()
 		fmt.Printf("%d: %s\n", i+1, line)
+        card, err := ParseCard(line)
+        if err != nil {
+		    fmt.Printf("    %v\n", card)
+        }
 
 
 		fmt.Println()
