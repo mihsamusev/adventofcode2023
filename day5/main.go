@@ -19,6 +19,6 @@ func main() {
 	}
 
 	fmt.Printf("Analyzing %d lines of %s\n", maxScans, dataFile)
-	//SolvePartOne(dataFile, maxScans)
+	//SolvePartOne(dataFile)
 	SolvePartTwo(dataFile)
 }
