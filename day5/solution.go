@@ -55,17 +55,16 @@ func SolvePartTwo(dataFile string) {
 	}
 	fmt.Println(farmingMaps)
 
+	ranges := InterpretRanges(seeds)
 	min := math.MaxInt
-    for i := 0; i < len(seeds) / 2; i++ {
-        seedStart := seeds[2 * i]
-        length := seeds[2 * i + 1]
-        for j := 0; j < length; j++ {
-			seed := seedStart + j
-			location := Trace(seed, farmingMaps)
-			if location < min {
-				min = location
+	for _, r := range ranges {
+		locationRanges := TraceRange(r, farmingMaps)
+		for _, loc := range locationRanges {
+			if loc.start < min {
+				min = loc.start
 			}
 		}
 	}
+
 	fmt.Println(min)
 }

@@ -52,25 +52,26 @@ func Trace(src int, maps []FarmingMap) int {
 }
 
 func TraceRange(r Range, maps[]FarmingMap) []Range {
-    stack := make([]Range, 0, 1)
-    stack[0] = r
+    prevBatch := make([]Range, 0, 1)
+    prevBatch[0] = r
 
     for _, m := range maps {
-        newRanges := m.Convert()
-
-        
+        nextBatch := make([]Range, 0, 1)
+        for _, p := range prevBatch {
+            newRanges := m.ConvertRange(p)
+            nextBatch = append(nextBatch, newRanges)
+        }
+        prevBatch = nextBatch
     }
- 
+    return prevBatch
 }
 
-func ExpandSeeds(seedRanges []int) []int {
-    seeds := make([]int, 0)
+func InterpretRanges(seedRanges []int) []Range {
+    ranges := make([]Range, 0)
     for i := 0; i < len(seedRanges) / 2; i++ {
         seedStart := seedRanges[2 * i]
         length := seedRanges[2 * i + 1]
-        for s := seedStart; s < seedStart + length; s++ {
-            seeds = append(seeds, s)
-        }
+        ranges = append(ranges, Range{seedStart, length}) 
     }
-    return seeds
+    return ranges
 }
