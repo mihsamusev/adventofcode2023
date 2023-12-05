@@ -44,14 +44,16 @@ func SolvePartOne(dataFile string, maxScans int) {
 	fmt.Printf("Total: %d\n", total)
 }
 
-func CountCards(startId int, cardsMap map[int][]int) int {
+type CardsLookup map[int][]int
+
+func CountCardsRecursive(startId int, cardsMap CardsLookup) int {
 	nextCards := cardsMap[startId]
 	sum := len(nextCards)
 	
 	fmt.Printf("%d: %d ->  %v\n", startId, sum, nextCards)
 
 	for _, nextId := range nextCards {
-		sum += CountCards(nextId, cardsMap)
+		sum += CountCardsRecursive(nextId, cardsMap)
 	}
 
 	return sum
@@ -65,7 +67,7 @@ func SolvePartTwo(dataFile string) {
 	}
 	lines := strings.Split(string(content), "\n")
 	cards := make([]Card, 0)
-	cardsMap := make(map[int][]int)
+	cardsMap := make(CardsLookup)
 	for _, line := range lines {
 		card, err := ParseCard(line)
 		if err != nil {
@@ -75,11 +77,38 @@ func SolvePartTwo(dataFile string) {
 		cardsMap[card.id] = NextCardIds(card)
 	}
 
+	//totalCards := CountTotalRecursive(cards, cardsMap)
+	totalCards := CountTotalIterative(cards, cardsMap)
 	fmt.Println(cardsMap)
+	fmt.Println(totalCards)
+}
+
+func CountTotalRecursive(cards[]Card, cardsMap CardsLookup) int {
 	totalCards := len(cards)
 	for _, card := range cards {
-		totalCards += CountCards(card.id, cardsMap)
+		totalCards += CountCardsRecursive(card.id, cardsMap)
 		fmt.Println()
 	}
-	fmt.Println(totalCards)
+	return totalCards
+}
+
+
+func CountTotalIterative(cards[]Card, cardsMap CardsLookup) int {
+	stack := make([]int, 0, len(cards))
+	for _, card := range cards {
+		stack = append(stack, card.id)
+	}
+	
+	totalCards := 0
+	for len(stack) != 0 {
+		last := len(stack) - 1
+		currentId := stack[last]
+		stack = stack[:last]
+
+		nextCards := cardsMap[currentId]
+		stack = append(stack, nextCards...)
+		totalCards ++
+
+	}
+	return totalCards
 }
