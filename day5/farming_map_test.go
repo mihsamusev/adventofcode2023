@@ -6,7 +6,7 @@ import (
 )
 
 func TestLookupContains(t *testing.T) {
-	lookup := Lookup{50, Range{98, 2}}
+	lookup := Lookup{50, Range{98, 99}}
 
 	assert.False(t, lookup.Contains(97))
 	assert.True(t, lookup.Contains(98))
@@ -15,7 +15,7 @@ func TestLookupContains(t *testing.T) {
 }
 
 func TestLookupConvert(t *testing.T) {
-	lookup := Lookup{50, Range{98, 2}}
+	lookup := Lookup{50, Range{98, 99}}
 	dst := lookup.Convert(99)
 	assert.Equal(t, 51, dst)
 }
@@ -23,8 +23,8 @@ func TestLookupConvert(t *testing.T) {
 func TestFarmingMap(t *testing.T) {
 	farmingMap := FarmingMap{
 		[]Lookup{
-			{50, Range{98, 2}},
-			{52, Range{50, 48}},
+			{50, Range{98, 99}},
+			{52, Range{50, 97}},
 		},
 	}
 
