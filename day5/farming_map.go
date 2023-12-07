@@ -22,10 +22,26 @@ func (l *Lookup) Convert(src int) int {
 }
 
 func (l *Lookup) ConvertRange(r Range) []Range {
+    ranges := make([]Range, 0, 3)
     // find itersection -> it gets re-mapped
+    toRemap := r.Intersection(l.srcRange)
+    if toRemap.Equal(Range{0, 0}) {
+        ranges = append(ranges, Range{0, 0})
+        return ranges
+    }
+    diffStart := r.start - l.srcRange.start
+    diffEnd := r.end - l.srcRange.start
+    remapped := Range{l.dstStart + diffStart, l.dstStart + diffEnd}
+    ranges = append(ranges, remapped)
+    // input range fully contained in the lookup range
+    if toRemap.Equal(r) {
+        return ranges
+    }
 
-    // find other parts -> they continue unchanged
-    return []Range{{0,0}, {0,0}, {0,0}}
+    // input range is "hanging" from left and/or right of the lookup range
+    diffRanges := toRemap.Difference(r)
+    ranges = append(ranges, diffRanges...)
+    return ranges
 }
 
 type FarmingMap struct {

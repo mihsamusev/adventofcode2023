@@ -34,10 +34,32 @@ func (r *Range) Union(other Range) Range {
 }
 
 func (r* Range) Intersection(other Range) Range {
-    return Range{0, 0}
+    newStart := Max(r.start, other.start)
+    newEnd := Min(r.end, other.start)
+    if newStart >= newEnd
+    return Range{newStart, newEnd}
+}
+
+func (r* Range) Difference(other Range) (left, right Range) {
+    return Range{0, 0}, Range{0, 0}
 }
 
 func (r* Range) Sub(other Range) Range {
     return Range{0, 0}
 }
 
+func Min(first, second int) int {
+    if first < second {
+        return first
+    } else {
+        return second
+    }
+}
+
+func Max(first, second int) int {
+    if first > second {
+        return first
+    } else {
+        return second
+    }
+}
