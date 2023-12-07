@@ -14,14 +14,29 @@ func TestRangeContains(t *testing.T) {
 	assert.False(t, r.In(Range{9, 10}))
 }
 
-func TestRangeUnion(t *testing.T) {
+func TestRangeUnionOk(t *testing.T) {
 	r1 :=  Range{1, 5}
 	r2 :=  Range{3, 8}
     expected := Range{1, 8} 
 	assert.Equal(t, r1.Union(r2), r2.Union(r1))
 	assert.Equal(t, expected, r1.Union(r2))
-
-	empty := Range{0, 0}
-	assert.Equal(t, empty, r1.Union(empty))
 }
+
+func TestRangeUnionBorder(t *testing.T) {
+	r1 :=  Range{1, 5}
+	r2 :=  Range{6, 8}
+    expected := Range{1, 8} 
+	assert.Equal(t, r1.Union(r2), r2.Union(r1))
+	assert.Equal(t, expected, r1.Union(r2))
+}
+
+func TestRangeUnionEmpty(t *testing.T) {
+	r1 :=  Range{1, 5}
+	r2 :=  Range{7, 8}
+	empty := Range{0, 0}
+	assert.Equal(t, r1.Union(r2), r2.Union(r1))
+	assert.Equal(t, empty, r1.Union(r2))
+}
+
+
 

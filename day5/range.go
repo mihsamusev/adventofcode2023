@@ -26,7 +26,7 @@ func (r *Range) Union(other Range) Range {
 
     newLength := end - start
     sumLength := r.end - r.start + other.end - other.start
-    if sumLength < newLength {
+    if newLength > sumLength + 1{
         return Range{0, 0}
     }
 
