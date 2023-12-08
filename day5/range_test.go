@@ -33,10 +33,40 @@ func TestRangeUnionBorder(t *testing.T) {
 func TestRangeUnionEmpty(t *testing.T) {
 	r1 :=  Range{1, 5}
 	r2 :=  Range{7, 8}
-	empty := Range{0, 0}
+	empty := Range{}
 	assert.Equal(t, r1.Union(r2), r2.Union(r1))
 	assert.Equal(t, empty, r1.Union(r2))
 }
 
+func TestIntersection(t *testing.T) {
+	r1 :=  Range{1, 4}
+	r2 :=  Range{3, 8}
+    expected := Range{3, 4}
+	assert.Equal(t, r1.Intersection(r2), r2.Intersection(r1))
+	assert.Equal(t, expected, r1.Intersection(r2))
+}
+
+func TestIntersectionContanined(t *testing.T) {
+	r1 :=  Range{1, 8}
+	r2 :=  Range{3, 6}
+	assert.Equal(t, r1.Intersection(r2), r2.Intersection(r1))
+	assert.Equal(t, r2, r1.Intersection(r2))
+}
 
 
+func TestIntersectionNonOverlapping(t *testing.T) {
+	r1 :=  Range{1, 4}
+	r2 :=  Range{5, 8}
+    expected := Range{}
+	assert.Equal(t, r1.Intersection(r2), r2.Intersection(r1))
+	assert.Equal(t, expected, r1.Intersection(r2))
+}
+
+
+func TestDifference(t *testing.T) {
+	r1 :=  Range{1, 4}
+	r2 :=  Range{5, 8}
+    expected := Range{}
+	assert.Equal(t, r1.Intersection(r2), r2.Intersection(r1))
+	assert.Equal(t, expected, r1.Intersection(r2))
+}

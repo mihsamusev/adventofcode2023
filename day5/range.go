@@ -27,7 +27,7 @@ func (r *Range) Union(other Range) Range {
     newLength := end - start
     sumLength := r.end - r.start + other.end - other.start
     if newLength > sumLength + 1{
-        return Range{0, 0}
+        return Range{}
     }
 
     return Range{start, end}
@@ -35,17 +35,19 @@ func (r *Range) Union(other Range) Range {
 
 func (r* Range) Intersection(other Range) Range {
     newStart := Max(r.start, other.start)
-    newEnd := Min(r.end, other.start)
-    if newStart >= newEnd
+    newEnd := Min(r.end, other.end)
+    if newStart > newEnd {
+        return Range{}
+    }
     return Range{newStart, newEnd}
 }
 
 func (r* Range) Difference(other Range) (left, right Range) {
-    return Range{0, 0}, Range{0, 0}
+    return Range{}, Range{0, 0}
 }
 
 func (r* Range) Sub(other Range) Range {
-    return Range{0, 0}
+    return Range{}
 }
 
 func Min(first, second int) int {

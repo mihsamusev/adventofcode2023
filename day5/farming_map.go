@@ -23,12 +23,15 @@ func (l *Lookup) Convert(src int) int {
 
 func (l *Lookup) ConvertRange(r Range) []Range {
     ranges := make([]Range, 0, 3)
+
     // find itersection -> it gets re-mapped
     toRemap := r.Intersection(l.srcRange)
-    if toRemap.Equal(Range{0, 0}) {
-        ranges = append(ranges, Range{0, 0})
+
+    if toRemap.Equal(Range{}) {
+        ranges = append(ranges, r)
         return ranges
     }
+
     diffStart := r.start - l.srcRange.start
     diffEnd := r.end - l.srcRange.start
     remapped := Range{l.dstStart + diffStart, l.dstStart + diffEnd}
@@ -76,7 +79,7 @@ func TraceRange(r Range, maps[]FarmingMap) []Range {
     for _, m := range maps {
         nextBatch := make([]Range, 0, 1)
         for _, p := range prevBatch {
-            if p.Equal(Range{0, 0}) {
+            if p.Equal(Range{}) {
                 continue
             }
 

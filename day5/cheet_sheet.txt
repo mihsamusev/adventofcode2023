@@ -1,0 +1,11 @@
+"gd" -> vim.lsp.buf.definition()
+"K" -> vim.lsp.buf.hover()
+"<leader>ws" -> vim.lsp.buf.workspace_symbol()
+"<leader>vd" -> vim.diagnostic.open_float()
+"[d" -> vim.diagnostic.goto_next()
+"]d" -> vim.diagnostic.goto_prev()
+"<leader>ca" -> vim.lsp.buf.code_action()
+"<leader>rr" -> vim.lsp.buf.references()
+"<leader>rn" -> vim.lsp.buf.rename()
+"<C-h>" -> vim.lsp.buf.signature_help()
+
