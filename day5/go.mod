@@ -2,6 +2,9 @@ module github.com/mihsamusev/adventofcode2023/day5
 
 go 1.21.4
 
+require common v0.0.0
+replace common => ../common
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

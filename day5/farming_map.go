@@ -110,14 +110,3 @@ func TraceRanges(ranges []Range, maps []FarmingMap) []Range {
 
 	return mappingStages[maxStages]
 }
-
-func SliceAsRanges(seedRanges []int) []Range {
-	ranges := make([]Range, 0)
-	for i := 0; i < len(seedRanges)/2; i++ {
-		start := seedRanges[2*i]
-		length := seedRanges[2*i+1]
-		end := start + length - 1
-		ranges = append(ranges, Range{start, end})
-	}
-	return ranges
-}

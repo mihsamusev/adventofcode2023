@@ -1,6 +1,7 @@
 package main
 
 import (
+	"common"
 	"fmt"
 	"math"
 	"os"
@@ -16,7 +17,7 @@ func SolvePartOne(dataFile string) {
 	}
 	blocks := strings.Split(string(content), "\n\n")
 
-	seeds, err := ParseNamedSlice(blocks[0], "seeds:")
+	seeds, err := common.ParseNamedSlice(blocks[0], "seeds:")
 	if err != nil {
 		panic(err)
 	}
@@ -47,11 +48,11 @@ func SolvePartTwo(dataFile string) {
 	}
 	blocks := strings.Split(string(content), "\n\n")
 
-	seeds, err := ParseNamedSlice(blocks[0], "seeds:")
+	seeds, err := common.ParseNamedSlice(blocks[0], "seeds:")
 	if err != nil {
 		panic(err)
 	}
-	seedRanges := SliceAsRanges(seeds)
+	seedRanges := InterpretSlice(seeds)
 	fmt.Println(seedRanges)
 
 	farmingMaps, err := ParseFarmingMaps(blocks[1:])

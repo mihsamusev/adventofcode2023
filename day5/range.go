@@ -1,5 +1,7 @@
 package main
 
+import "common"
+
 type Range struct {
 	start int
 	end   int
@@ -54,8 +56,8 @@ func (r *Range) Union(other Range) Range {
 }
 
 func (r *Range) Intersection(other Range) Range {
-	newStart := Max(r.start, other.start)
-	newEnd := Min(r.end, other.end)
+	newStart := common.Max(r.start, other.start)
+	newEnd := common.Min(r.end, other.end)
 	if newStart > newEnd {
 		return Range{}
 	}
@@ -82,18 +84,13 @@ func (r *Range) Diff(other Range) (left, right Range) {
 	return left, right
 }
 
-func Min(first, second int) int {
-	if first < second {
-		return first
-	} else {
-		return second
+func InterpretSlice(slice []int) []Range {
+	ranges := make([]Range, 0)
+	for i := 0; i < len(slice)/2; i++ {
+		start := slice[2*i]
+		length := slice[2*i+1]
+		end := start + length - 1
+		ranges = append(ranges, Range{start, end})
 	}
-}
-
-func Max(first, second int) int {
-	if first > second {
-		return first
-	} else {
-		return second
-	}
+	return ranges
 }
