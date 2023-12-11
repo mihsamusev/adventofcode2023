@@ -8,6 +8,8 @@ import (
 )
 
 func SolvePartOne(dataFile string) {
+	fmt.Println("SOLUTION 1")
+
 	content, err := os.ReadFile(dataFile)
 	if err != nil {
 		fmt.Println("im dead")
@@ -37,6 +39,8 @@ func SolvePartOne(dataFile string) {
 }
 
 func SolvePartTwo(dataFile string) {
+	fmt.Println("SOLUTION 2")
+
 	content, err := os.ReadFile(dataFile)
 	if err != nil {
 		fmt.Println("im dead")
@@ -47,24 +51,22 @@ func SolvePartTwo(dataFile string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(seeds)
+	seedRanges := SliceAsRanges(seeds)
+	fmt.Println(seedRanges)
 
 	farmingMaps, err := ParseFarmingMaps(blocks[1:])
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(farmingMaps)
 
-	ranges := InterpretRanges(seeds)
+	minRanges := TraceRanges(seedRanges, farmingMaps)
+
 	min := math.MaxInt
-	for _, r := range ranges {
-		locationRanges := TraceRange(r, farmingMaps)
-		for _, loc := range locationRanges {
-			if loc.start < min {
-				min = loc.start
-			}
+	for _, r := range minRanges {
+		if r.start < min {
+			min = r.start
 		}
 	}
 
-	fmt.Println(min)
+	fmt.Printf("Min seed location %d\n", min)
 }

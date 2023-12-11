@@ -8,43 +8,19 @@ type Lookup struct {
 }
 
 func (l *Lookup) Contains(src int) bool {
-	diff := src - l.srcRange.start
-    length := l.srcRange.end - l.srcRange.start
-	return (diff >= 0) && (diff <= length)
+	return l.srcRange.HasValue(src)
+}
+
+func (l *Lookup) Offset() int {
+	return l.dstStart - l.srcRange.start
 }
 
 func (l *Lookup) Convert(src int) int {
 	if !l.Contains(src) {
 		return src
 	}
-	diff := src - l.srcRange.start
-	return l.dstStart + diff
-}
-
-func (l *Lookup) ConvertRange(r Range) []Range {
-    ranges := make([]Range, 0, 3)
-
-    // find itersection -> it gets re-mapped
-    toRemap := r.Intersection(l.srcRange)
-
-    if toRemap.Equal(Range{}) {
-        ranges = append(ranges, r)
-        return ranges
-    }
-
-    diffStart := r.start - l.srcRange.start
-    diffEnd := r.end - l.srcRange.start
-    remapped := Range{l.dstStart + diffStart, l.dstStart + diffEnd}
-    ranges = append(ranges, remapped)
-    // input range fully contained in the lookup range
-    if toRemap.Equal(r) {
-        return ranges
-    }
-
-    // input range is "hanging" from left and/or right of the lookup range
-    diffRanges := toRemap.Difference(r)
-    ranges = append(ranges, diffRanges...)
-    return ranges
+	offset := src - l.srcRange.start
+	return l.dstStart + offset
 }
 
 type FarmingMap struct {
@@ -60,45 +36,88 @@ func (f *FarmingMap) Convert(src int) int {
 	return src
 }
 
+func (f *FarmingMap) ConvertRange(r Range) []Range {
+	ranges := make([]Range, 0)
+
+	stack := make([]Range, 0)
+	stack = append(stack, r)
+
+	found := false
+	for len(stack) > 0 {
+		popped := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		found = false
+
+		for _, l := range f.lookups {
+			inter := popped.Intersection(l.srcRange)
+
+			fmt.Printf("stack: %v popped: %v lookup %v\n", stack, popped, l.srcRange)
+			if inter.IsEmpty() {
+				continue
+			}
+
+			found = true
+			mapped := inter.Offset(l.Offset())
+			ranges = append(ranges, mapped)
+
+			// check if there are parts left
+			if popped.In(l.srcRange) {
+				fmt.Printf("popped %v completely in lookup %v\n", inter, l.srcRange)
+				break
+			}
+
+			left, right := popped.Diff(inter)
+			fmt.Printf("left: %v, inter: %v, right %v\n", left, inter, right)
+			if !left.IsEmpty() {
+				stack = append(stack, left)
+			}
+			if !right.IsEmpty() {
+				stack = append(stack, right)
+			}
+			break
+		}
+
+		if !found {
+			ranges = append(ranges, popped)
+		}
+	}
+	return ranges
+}
 
 func Trace(src int, maps []FarmingMap) int {
-    dst := src
-    fmt.Printf("%d", src)
-    for _, m := range maps {
-        dst = m.Convert(dst)
-        fmt.Printf(" -> %d", dst)
-    }
-    fmt.Printf("\n")
-    return dst
+	dst := src
+	fmt.Printf("%d", src)
+	for _, m := range maps {
+		dst = m.Convert(dst)
+		fmt.Printf(" -> %d", dst)
+	}
+	fmt.Printf("\n")
+	return dst
 }
 
-func TraceRange(r Range, maps[]FarmingMap) []Range {
-    prevBatch := make([]Range, 0, 1)
-    prevBatch[0] = r
+func TraceRanges(ranges []Range, maps []FarmingMap) []Range {
+	mappingStages := make([][]Range, 0)
+	maxStages := len(maps)
+	mappingStages = append(mappingStages, ranges)
 
-    for _, m := range maps {
-        nextBatch := make([]Range, 0, 1)
-        for _, p := range prevBatch {
-            if p.Equal(Range{}) {
-                continue
-            }
+	for i, m := range maps {
+		nextMappingStage := make([]Range, 0)
+		for _, r := range mappingStages[i] {
+			nextMappingStage = append(nextMappingStage, m.ConvertRange(r)...)
+		}
+		mappingStages = append(mappingStages, nextMappingStage)
+	}
 
-            for _, lookup := range m.lookups {
-                newRanges := lookup.ConvertRange(p)
-                nextBatch = append(nextBatch, newRanges...)
-            }
-        }
-        prevBatch = nextBatch
-    }
-    return prevBatch
+	return mappingStages[maxStages]
 }
 
-func InterpretRanges(seedRanges []int) []Range {
-    ranges := make([]Range, 0)
-    for i := 0; i < len(seedRanges) / 2; i++ {
-        seedStart := seedRanges[2 * i]
-        length := seedRanges[2 * i + 1]
-        ranges = append(ranges, Range{seedStart, length}) 
-    }
-    return ranges
+func SliceAsRanges(seedRanges []int) []Range {
+	ranges := make([]Range, 0)
+	for i := 0; i < len(seedRanges)/2; i++ {
+		start := seedRanges[2*i]
+		length := seedRanges[2*i+1]
+		end := start + length - 1
+		ranges = append(ranges, Range{start, end})
+	}
+	return ranges
 }

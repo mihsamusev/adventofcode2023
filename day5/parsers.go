@@ -1,49 +1,49 @@
 package main
 
 import (
+	"errors"
 	"strconv"
 	"strings"
-    "errors"
 )
 
 func ParseId(str, prefix string) (int, error) {
-    result, found := strings.CutPrefix(str,prefix)
-    if !found {
-        return -1, nil
-    }
-    result = strings.TrimSpace(result)
-    return strconv.Atoi(result)
+	result, found := strings.CutPrefix(str, prefix)
+	if !found {
+		return -1, nil
+	}
+	result = strings.TrimSpace(result)
+	return strconv.Atoi(result)
 }
 
 func ParseNamedSlice(str, prefix string) ([]int, error) {
-    result, found := strings.CutPrefix(str,prefix)
-    if !found {
-        return make([]int, 0), errors.New("no prefix found")
-    }
-    return ParseSlice(result)
+	result, found := strings.CutPrefix(str, prefix)
+	if !found {
+		return make([]int, 0), errors.New("no prefix found")
+	}
+	return ParseSlice(result)
 }
 
 func ParseSlice(str string) ([]int, error) {
-    trimmed := strings.Fields(str)
-    slice := make([]int, 0)
-    for _, t := range trimmed {
-        n, err := strconv.Atoi(t)
-        if err != nil {
-            return slice, err
-        }
-        slice = append(slice, n)
-    }
-    return slice, nil
+	trimmed := strings.Fields(str)
+	slice := make([]int, 0)
+	for _, t := range trimmed {
+		n, err := strconv.Atoi(t)
+		if err != nil {
+			return slice, err
+		}
+		slice = append(slice, n)
+	}
+	return slice, nil
 }
 
-func ParseFarmingMap(str string, withHeader bool) (FarmingMap, error){
+func ParseFarmingMap(str string, withHeader bool) (FarmingMap, error) {
 	lines := strings.Split(str, "\n")
 	if len(lines) == 0 {
 		return FarmingMap{}, errors.New("rows not found")
 	}
 
 	if withHeader {
-		lines = lines[1:]	
+		lines = lines[1:]
 	}
 
 	lookups := make([]Lookup, 0)
@@ -54,8 +54,10 @@ func ParseFarmingMap(str string, withHeader bool) (FarmingMap, error){
 		}
 		if len(n) != 3 {
 			return FarmingMap{}, errors.New("expected 3 numbers")
-		} 
-		lookups = append(lookups, Lookup{n[0], Range{n[1], n[2]}})
+		}
+		dst := n[0]
+		srcRange := Range{n[1], n[1] + n[2] - 1}
+		lookups = append(lookups, Lookup{dst, srcRange})
 	}
 
 	return FarmingMap{lookups}, nil
@@ -65,9 +67,9 @@ func ParseFarmingMaps(lines []string) ([]FarmingMap, error) {
 	farmingMaps := make([]FarmingMap, 0)
 	for _, b := range lines {
 		farmingMap, err := ParseFarmingMap(b, true)
-		if err != nil{
+		if err != nil {
 			panic(err)
-		} 
+		}
 		farmingMaps = append(farmingMaps, farmingMap)
 	}
 	return farmingMaps, nil
@@ -117,4 +119,3 @@ func Sum(elements []int) int {
 	}
 	return sum
 }
-
