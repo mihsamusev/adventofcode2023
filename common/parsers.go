@@ -2,10 +2,31 @@ package common
 
 import (
 	"errors"
+	"os"
 	"strconv"
 	"strings"
 )
 
+type CliArgs struct {
+	FileName string
+	LineCount int
+}
+
+func ReadCliArgs() CliArgs {
+	args := CliArgs{"test.txt", 0}
+	argParts := os.Args
+	if len(argParts) > 1 {
+		args.FileName = argParts[1]
+	}
+
+	if len(argParts) > 2 {
+		lineCount, err := strconv.Atoi(argParts[2])
+		if err == nil {
+			args.LineCount = lineCount
+		}
+	}
+	return args
+}
 
 func ParseId(str, prefix string) (int, error) {
 	result, found := strings.CutPrefix(str, prefix)

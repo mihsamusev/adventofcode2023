@@ -1,3 +1,3 @@
-module github.com/mihsamusev/adventofcode2023/day1
+module github.com/mihsamusev/adventofcode2023/day2
 
 go 1.21.4

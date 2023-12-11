@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	dataFile := "test_1.txt"
+	dataFile := "test.txt"
 	maxScans := -1
 	args := os.Args
 	if len(args) > 1 {

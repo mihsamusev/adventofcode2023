@@ -8,10 +8,10 @@ import (
 	"strings"
 )
 
-func SolvePartOne(dataFile string) {
+func SolvePartOne(args common.CliArgs) {
 	fmt.Println("SOLUTION 1")
 
-	content, err := os.ReadFile(dataFile)
+	content, err := os.ReadFile(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")
 	}
@@ -39,10 +39,10 @@ func SolvePartOne(dataFile string) {
 	fmt.Println(min)
 }
 
-func SolvePartTwo(dataFile string) {
+func SolvePartTwo(args common.CliArgs) {
 	fmt.Println("SOLUTION 2")
 
-	content, err := os.ReadFile(dataFile)
+	content, err := os.ReadFile(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")
 	}
