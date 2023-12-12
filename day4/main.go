@@ -1,24 +1,16 @@
 package main
 
 import (
+	"common"
 	"fmt"
-	"os"
-	"strconv"
 )
 
 func main() {
-	dataFile := "test.txt"
-	maxScans := -1
-	args := os.Args
-	if len(args) > 1 {
-		dataFile = args[1]
-	}
+	args := common.ReadCliArgs()
 
-	if len(args) > 2 {
-		maxScans, _ = strconv.Atoi(args[2])
-	}
+	fmt.Println("SOLUTION PART 1")
+	SolvePartOne(args)
 
-	fmt.Printf("Analyzing %d lines of %s\n", maxScans, dataFile)
-	//SolvePartOne(dataFile, maxScans)
-	SolvePartTwo(dataFile)
+	fmt.Println("SOLUTION PART 2")
+	SolvePartTwo(args)
 }

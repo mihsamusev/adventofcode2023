@@ -9,8 +9,6 @@ import (
 )
 
 func SolvePartOne(args common.CliArgs) {
-	fmt.Println("SOLUTION 1")
-
 	content, err := os.ReadFile(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")
@@ -40,8 +38,6 @@ func SolvePartOne(args common.CliArgs) {
 }
 
 func SolvePartTwo(args common.CliArgs) {
-	fmt.Println("SOLUTION 2")
-
 	content, err := os.ReadFile(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")

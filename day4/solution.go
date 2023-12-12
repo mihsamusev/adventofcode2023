@@ -2,13 +2,14 @@ package main
 
 import (
 	"bufio"
+	"common"
 	"fmt"
 	"os"
 	"strings"
 )
 
-func SolvePartOne(dataFile string, maxScans int) {
-	file, err := os.Open(dataFile)
+func SolvePartOne(args common.CliArgs) {
+	file, err := os.Open(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")
 	}
@@ -18,7 +19,7 @@ func SolvePartOne(dataFile string, maxScans int) {
 	i := 0
 	total := 0
 	for {
-		if maxScans != -1 && i == maxScans {
+		if args.LineCount != -1 && i == args.LineCount {
 			break
 		}
 		if !scanner.Scan() {
@@ -44,24 +45,9 @@ func SolvePartOne(dataFile string, maxScans int) {
 	fmt.Printf("Total: %d\n", total)
 }
 
-type CardsLookup map[int][]int
 
-func CountCardsRecursive(startId int, cardsMap CardsLookup) int {
-	nextCards := cardsMap[startId]
-	sum := len(nextCards)
-	
-	fmt.Printf("%d: %d ->  %v\n", startId, sum, nextCards)
-
-	for _, nextId := range nextCards {
-		sum += CountCardsRecursive(nextId, cardsMap)
-	}
-
-	return sum
-
-}
-
-func SolvePartTwo(dataFile string) {
-	content, err := os.ReadFile(dataFile)
+func SolvePartTwo(args common.CliArgs) {
+	content, err := os.ReadFile(args.FileName)
 	if err != nil {
 		fmt.Println("im dead")
 	}
@@ -77,10 +63,25 @@ func SolvePartTwo(dataFile string) {
 		cardsMap[card.id] = NextCardIds(card)
 	}
 
-	//totalCards := CountTotalRecursive(cards, cardsMap)
 	totalCards := CountTotalIterative(cards, cardsMap)
 	fmt.Println(cardsMap)
 	fmt.Println(totalCards)
+}
+
+type CardsLookup map[int][]int
+
+func CountCardsRecursive(startId int, cardsMap CardsLookup) int {
+	nextCards := cardsMap[startId]
+	sum := len(nextCards)
+	
+	fmt.Printf("%d: %d ->  %v\n", startId, sum, nextCards)
+
+	for _, nextId := range nextCards {
+		sum += CountCardsRecursive(nextId, cardsMap)
+	}
+
+	return sum
+
 }
 
 func CountTotalRecursive(cards[]Card, cardsMap CardsLookup) int {

@@ -13,7 +13,7 @@ type CliArgs struct {
 }
 
 func ReadCliArgs() CliArgs {
-	args := CliArgs{"test.txt", 0}
+	args := CliArgs{"test.txt", -1}
 	argParts := os.Args
 	if len(argParts) > 1 {
 		args.FileName = argParts[1]
