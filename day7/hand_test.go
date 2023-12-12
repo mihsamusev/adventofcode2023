@@ -28,3 +28,9 @@ func TestCombos(t *testing.T) {
 	h = Hand{[]Card("23456"), 0}
 	assert.Equal(t, OneCard, Combo(h))
 }
+
+func TestComboWithJoker(t *testing.T) {
+	h := Hand{[]Card("JKKK2"), 0}
+	assert.Equal(t, Four, ComboWithJoker(h))
+
+}
