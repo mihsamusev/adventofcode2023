@@ -1,4 +1,4 @@
-module github.com/mihsamusev/adventofcode2023/day6
+module github.com/mihsamusev/adventofcode2023/day10
 
 go 1.21.4
 

@@ -8,7 +8,7 @@ import (
 )
 
 type CliArgs struct {
-	FileName string
+	FileName  string
 	LineCount int
 }
 
@@ -45,6 +45,31 @@ func ParseNamedSlice(str, prefix string) ([]int, error) {
 	return ParseSlice(result)
 }
 
+func ParseNameValuePair(str string) (
+	struct {
+		Name  string
+		Value int
+	}, error) {
+	result := struct {
+		Name  string
+		Value int
+	}{"", 0}
+	parts := strings.Fields(str)
+	if len(parts) != 2 {
+		return result, errors.New("expected exactly 2 parts")
+	}
+
+	result.Name = parts[0]
+
+	value, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return result, err
+	}
+
+	result.Value = value
+	return result, nil
+}
+
 func ParseSlice(str string) ([]int, error) {
 	trimmed := strings.Fields(str)
 	slice := make([]int, 0)
@@ -56,4 +81,18 @@ func ParseSlice(str string) ([]int, error) {
 		slice = append(slice, n)
 	}
 	return slice, nil
+}
+
+func ParseSlices(str, sep string) ([][]int, error) {
+	rows := strings.Split(str, sep)
+	slices := make([][]int, 0, len(rows))
+
+	for _, row := range rows {
+		slice, err := ParseSlice(row)
+		if err != nil {
+			return slices, err
+		}
+		slices = append(slices, slice)
+	}
+	return slices, nil
 }
