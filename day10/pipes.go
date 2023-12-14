@@ -6,6 +6,10 @@ const (
 	East
 	South
 	West
+	NorthWest
+	NorthEast
+	SouthWest
+	SouthEast
 )
 
 
@@ -54,4 +58,40 @@ func CanMove(from, to rune, dir int) bool {
 		}
 	}
 	return false
+}
+
+var testMovesCCW = map[int]map[rune][]int{
+	North: {
+		'|': {East},
+		'F': {},
+		'7': {East, North, NorthEast},
+	},
+	South: {
+		'|': {West},
+		'J': {},
+		'L': {West, South, SouthWest},
+	},
+	West: {
+		'-': {North},
+		'L': {},
+		'F': {North, West, NorthWest},
+	},
+	East: {
+		'-': {South},
+		'7': {},
+		'J': {South, East, SouthEast},
+	},
+}
+
+
+func PosToTest(thisPos Pos, nextPipe rune, flowDir int) []Pos {
+	testDirs := testMovesCCW[flowDir][nextPipe]
+	positions := make([]Pos, 0)
+	for _, d := range testDirs {
+		p := thisPos.Move(d)
+		if (p != Pos{}) {
+			positions = append(positions, p)
+		}
+	}
+	return positions
 }
