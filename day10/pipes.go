@@ -1,16 +1,6 @@
 package main
 
 
-const (
-	North int = iota
-	East
-	South
-	West
-	NorthWest
-	NorthEast
-	SouthWest
-	SouthEast
-)
 
 
 var okMoves = map[rune]map[int][3]rune{
