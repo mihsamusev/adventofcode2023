@@ -30,6 +30,23 @@ func SlicesToNumbers(str string, slices []SliceIdx) []int {
 	return numbers
 }
 
+func SortPair(first, second int) (int, int) {
+	if second > first {
+		return first, second
+	}
+	return second, first
+}
+
+func CountInRange(values []int, min, max int) int {
+	min, max = SortPair(min, max)
+	count := 0
+	for _, v := range values {
+		if v >= min && v <= max {
+			count++
+		}
+	}
+	return count
+}
 
 func Diff(values []int) []int {
 	diff := make([]int, len(values) - 1)
