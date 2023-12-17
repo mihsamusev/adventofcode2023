@@ -83,6 +83,20 @@ func ParseSlice(str string) ([]int, error) {
 	return slice, nil
 }
 
+func ParseDelimitedSlice(str string, delimiter string) ([]int, error) {
+	split := strings.Split(str, delimiter)
+	slice := make([]int, 0)
+	for _, s := range split {
+		t := strings.TrimSpace(s)
+		n, err := strconv.Atoi(t)
+		if err != nil {
+			return slice, err
+		}
+		slice = append(slice, n)
+	}
+	return slice, nil
+}
+
 func ParseSlices(str, sep string) ([][]int, error) {
 	rows := strings.Split(str, sep)
 	slices := make([][]int, 0, len(rows))
